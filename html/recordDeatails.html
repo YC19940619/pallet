@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <link rel="stylesheet" type="text/css" href="../common/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/recordDeatails.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="css/echarts.css"/>-->
+    <script type="text/javascript" src="../common/rem.js"></script>
+    <script type="text/javascript" src="../common/echarts.js"></script>
+    <script type="text/javascript" src="../common/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="../common/common.js"></script>
+    <title>看货记录</title>
+</head>
+<body>
+<header>
+    <span class="left goback"><img src="../img/goback.png"></span>
+    <p>看货记录</p>
+    <span class="right save">保存</span>
+</header>
+<section>
+    <div class="main">
+        <div class="all">
+            <div class="top">
+                <div class="info number"><span class="left">批次看货编号：</span><div class="right"><p>201806271454</p></div></div>
+                <div class="info storeName"><span class="left">店铺名称：</span><div class="right"><p>昌黎店</p></div></div>
+                <div class="info startTime"><span class="left">开始看货时间：</span><div class="right"><p>2018-06-27 14:54</p></div></div>
+                <div class="info sex"><span class="left">客户性别：</span><div class="right">
+                        <label><input type="radio" name="sex" value="male" />男</label>
+                        <label><input type="radio" name="sex" value="female" />女</label>
+                </div></div>
+                <div class="info age"><span class="left">客户年龄段：</span>
+                    <div class="right">
+                        <label><input type="radio" name="age" value="16岁以下" />16岁以下</label>
+                        <label><input type="radio" name="age" value="16-24岁" />16-24岁</label>
+                        <label><input type="radio" name="age" value="25-34岁" />25-34岁</label>
+                        <label><input type="radio" name="age" value="35-44岁" />35-44岁</label>
+                        <label><input type="radio" name="age" value="55岁以上" />55岁以上</label>
+                    </div>
+                </div>
+                <div class="info viewTime"><span class="left">看货总时长：</span><div class="right"><p>10分钟</p></div></div>
+                <div class="info viewCount"><span class="left">看货件数：</span><div class="right"><p>4件</p></div></div>
+                <div class="info tryCount"><span class="left">试戴件数：</span><div class="right"><p>4件</p></div></div>
+            </div>
+            <div class="bottom">
+
+            </div>
+        </div>
+        <div class="items">
+
+        </div>
+
+    </div>
+
+</section>
+</body>
+<script>
+
+    $(".goback").click(function(){
+        history.go(-1)
+    })
+    $('.sureAge span').click(function(){
+        $('.sureAge ul').toggleClass('none');
+        $('.sureAge').toggleClass('down');
+    })
+    $('.sureAge ul li').click(function(){
+        $('.sureAge span').text($(this).text());
+        $('.sureAge ul').toggleClass('none');
+    })
+    new if_access_token({
+        type: 'get',
+        url: records+"/"+Request.QueryString("record_id"),
+        data: {
+            store_serial:Request.QueryString("store_serial"),
+            store_name:Request.QueryString("store_name")
+        },
+        success: function (data) {
+            console.log(data)
+            var view_time_total = data.data.view_time_total;
+            $(".number .right p").text(Request.QueryString("record_id"));
+            $(".storeName .right p").text(data.data.store_name)
+            $(".startTime .right p").text(data.data.start_time);
+            $(".sex input[value="+ data.data.gender +"]").attr("checked",true)
+            $(".age input[value="+ data.data.age +"]").attr("checked",true)
+            $(".viewTime .right p").text(formatSeconds(view_time_total));
+            $(".viewCount .right p").text(data.data.view_product_count+"件");
+            $(".tryCount .right p").text(data.data.try_count_total+"件");
+            var str = "";
+            $(data.data.products).each(function(){
+                var style_serial = this.style_serial;
+                var view_time = this.view_time > view_time_total?view_time_total:this.view_time;//如果超出总看货时长 按总看或时长算
+                var choice = this.choice;
+                if(choice === 'self'){choice = '顾客自选'}else{choice = '导购推荐'}
+                str = '<div class="product">'+this.product_name+'</div>'
+                itemstr ='<div class="one one'+this.rfid+'" product_id="'+this.id+'"><div class="img_details"><img onerror="this.src=\'../img/item/common/product.jpg\'" src="../img/item/'+style_serial+'/product.jpg"></div>\n' +
+                    '                <div class="info_details">\n' +
+                    '                    <div class="info"><span class="left">看货编号：</span><div class="right"><p>'+this.view_serial+'</p></div></div>\n' +
+                    '                    <div class="info"><span class="left">标签编码：</span><div class="right"><p>'+this.rfid+'</p></div></div>\n' +
+                    '                    <div class="info"><span class="left">款式编码：</span><div class="right"><p>'+style_serial+'</p></div></div>\n' +
+                    '                    <div class="info"><span class="left">款式名称：</span><div class="right"><p>'+this.product_name+'</p></div></div>\n' +
+                    '                    <div class="info"><span class="left">看货时长：</span><div class="right"><p>'+formatSeconds(view_time)+'</p></div></div>\n' +
+                    '                    <div class="info"><span class="left">试戴时长：</span><div class="right"><p>'+formatSeconds(this.try_time)+'</p></div></div>\n' +
+                    '                    <div class="info"><span class="left">选择方式：</span><div class="right"><p>'+choice+'</p></div></div>\n'+
+                    '                    <div class="info isbuy"><span class="left">是否购买：</span><div class="right">'
+                    if(this.is_buy == 0){
+                        itemstr +='<p>未购买</p></div></div><div class="info nobuy"><span class="left">未购买原因：</span><div class="right">'+
+                            '                       <label><input type="radio" name="nobuy'+this.rfid+'" value="考虑一下" />考虑一下</label>'+
+                            '                       <label><input type="radio" name="nobuy'+this.rfid+'" value="没打算买" />没打算买</label>'+
+                            '                       <label><input type="radio" name="nobuy'+this.rfid+'" value="货比三家" />货比三家</label>'+
+                            '                       <label><input type="radio" name="nobuy'+this.rfid+'" value="设计怪异" />设计怪异</label>'+
+                            '                       <label><input type="radio" name="nobuy'+this.rfid+'" value="不喜欢" />不喜欢</label>'+
+                            '                       <label><input type="radio" name="nobuy'+this.rfid+'" value="喜欢但太贵" />喜欢但太贵</label>'+
+                            '                       <label><input type="radio" name="nobuy'+this.rfid+'" value="对产品不太了解" />对产品不太了解</label>'+
+                            '                    </div></div>\n' +
+                            '            </div></div>'
+                    }else{
+                        itemstr +='<p>已购买</p></div></div>'
+                    }
+                $(".all .bottom").append(str);
+                $(".items").append(itemstr);
+                // $(".one"+this.rfid+" .isbuy input[value="+this.is_buy+"]").prop("checked",true);
+                $(".one"+this.rfid+" .nobuy input[value="+this.not_buy_reason+"]").prop("checked",true);
+
+            })
+            $(".all .bottom .product").eq(0).addClass("active");
+            $(".items .one").eq(0).addClass("active");
+        },
+        error: function () {
+            new Toast({context: $('body'), message: '网络错误'}).show();
+        }
+    })
+
+
+    $(".all").delegate('.product','click',function(){
+        var index = $(this).index();
+        $(this).addClass("active").siblings(".product").removeClass("active");
+        $(".one").eq(index).addClass("active").siblings(".one").removeClass("active");
+    })
+    $('header .save').click(function(){
+        var age = $(".age input[type=radio]:checked").val();
+        var gender = $(".sex input[type=radio]:checked").val();
+        var products = [];
+        $(".nobuy").each(function(){
+            var product_id = $(this).parents(".one").attr("product_id");
+            var not_buy_reason = $(this).find("input[type=radio]:checked").val();
+            products.push(JSON.stringify({
+                product_id:product_id,
+                not_buy_reason:not_buy_reason
+            }))
+        })
+        products = '['+products.join(",")+']'
+        new if_access_token({
+            type:'put',
+            url: records+"/"+Request.QueryString("record_id"),
+            data: {
+                store_serial:Request.QueryString("store_serial"),
+                age:age,
+                gender:gender,
+                products:products
+            },
+            success:function(data){
+                console.log(data)
+                if(data.code === 'SUCCESS'){
+                    new Toast({context: $('body'), message: '信息修改成功'}).show();
+                }else{
+                    new Toast({context: $('body'), message: '信息修改失败'}).show();
+                }
+            }
+        })
+    })
+
+
+</script>
+</html>

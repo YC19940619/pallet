@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <link rel="stylesheet" type="text/css" href="../common/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/echarts.css"/>
+    <script type="text/javascript" src="../common/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="../common/rem.js"></script>
+    <script type="text/javascript" src="../common/common.js"></script>
+    <script type="text/javascript" src="../common/echarts.js"></script>
+    <script type="text/javascript" src="../common/echartcommon.js"></script>
+    <title>echart</title>
+</head>
+<body>
+<section>
+    <div class="main">
+        <div class="box">
+            <span data-v-71e86ad1="" class="row1"></span>
+            <span data-v-71e86ad1="" class="row2"></span>
+            <span data-v-71e86ad1="" class="col2"></span>
+            <span data-v-71e86ad1="" class="col1"></span>
+            <div class="surface item1" content_type="not_buy_reason">未购买原因分布</div>
+        </div>
+        <div class="box">
+            <span data-v-71e86ad1="" class="row1"></span>
+            <span data-v-71e86ad1="" class="row2"></span>
+            <span data-v-71e86ad1="" class="col2"></span>
+            <span data-v-71e86ad1="" class="col1"></span>
+            <div class="surface item2" content_type="view_time_total">看货总时长分布</div>
+        </div>
+        <div class="box">
+            <span data-v-71e86ad1="" class="row1"></span>
+            <span data-v-71e86ad1="" class="row2"></span>
+            <span data-v-71e86ad1="" class="col2"></span>
+            <span data-v-71e86ad1="" class="col1"></span>
+            <div class="surface item3" content_type="product_view_count">看货件数分布</div>
+        </div>
+        <div class="box">
+            <span data-v-71e86ad1="" class="row1"></span>
+            <span data-v-71e86ad1="" class="row2"></span>
+            <span data-v-71e86ad1="" class="col2"></span>
+            <span data-v-71e86ad1="" class="col1"></span>
+            <div class="surface item4" content_type="try_count_total">试戴时长分布</div>
+        </div>
+        <div class="box" style="width: 95%;height: 100%;margin: 0 2.5%;">
+            <span data-v-71e86ad1="" class="row1"></span>
+            <span data-v-71e86ad1="" class="row2"></span>
+            <span data-v-71e86ad1="" class="col2"></span>
+            <span data-v-71e86ad1="" class="col1"></span>
+            <div class="surface item5" content_type="style_view_count">款式被看次数排名TOP10</div>
+        </div>
+    </div>
+</section>
+</body>
+<script>
+    var datastyle = new datastyle();
+    var charts = function(){
+        this.init();
+    }
+    charts.prototype = {
+        init:function(){
+            this.topnum = 10;
+            this.store_serial = Request.QueryString("store_serial");
+            var that =this
+            $(".main .surface").each(function(){
+                var content_type = $(this).attr("content_type");
+                var title = $(this).text();
+                that.getdata(title,content_type,this)
+            })
+        },
+        getdata:function(title,content_type,obj){
+            var option;
+            if(content_type === 'style_view_count')//款式被看次数排行 柱状图
+                option = datastyle.bardata(title);
+            else
+                option = datastyle.piedata(title);
+            var that = this;
+            var data = {
+                content_type: content_type,//product_to_view  not_buy_reason
+                store_serial: that.store_serial,
+                show_type : "all"
+            }
+            new if_access_token({
+                type: 'get',
+                url: chartdata,
+                data: data,
+                success: function (data) {
+                    console.log(data)
+                    if(data.code === "SUCCESS"){
+                        data.data.sort(compare('value'))
+                        if(content_type === 'style_view_count'){//款式被看次数排行 柱状图 取前十
+                            var topnumber = that.topnum > data.data.length ? data.data.length : that.topnum
+                            for (var i = 0; i < topnumber; i++) {
+                                option.yAxis.data.unshift(data.data[i].name);
+                                option.series[0].data.unshift(data.data[i].value);
+                            }
+                        }else{
+                            option.series[0].data = data.data;
+                        }
+                        var chart = echarts.init(obj);
+                        chart.setOption(option);
+                    }
+                },
+                error: function () {
+                    new Toast({context: $('body'), message: '网络错误'}).show();
+                }
+            })
+        }
+    }
+    new charts();
+</script>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <link rel="stylesheet" type="text/css" href="../common/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/Statistics.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="css/echarts.css"/>-->
+    <script type="text/javascript" src="../common/rem.js"></script>
+    <script type="text/javascript" src="../common/echarts.js"></script>
+    <script type="text/javascript" src="../common/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="../common/common.js"></script>
+    <script type="text/javascript" src="../js/Statistics.js"></script>
+    <title>随我图表</title>
+</head>
+<body>
+<header>
+    <span class="left goback"><img src="../img/goback.png"></span>
+    <p style="color: #fff;background: none">数据仪表盘</p>
+    <!--<div class="nav">-->
+        <!--<p class="mchname" store_serial="110100-100001-1">当前门店：公益星门店-1</p>-->
+        <!--<div class="mchlist">-->
+            <!--<p class="selecting">公益星门店-1</p>-->
+            <!--<ul class="select-ul">-->
+                <!--<li store_serial="110100-100001-1">公益星门店-1</li>-->
+                <!--<li store_serial="110100-100002-1">公益星门店-2</li>-->
+                <!--<li store_serial="110100-100003-1">公益星门店-3</li>-->
+                <!--<li store_serial="110100-100004-1">公益星门店-4</li>-->
+                <!--<li store_serial="110100-100005-1">公益星门店-5</li>-->
+                <!--<li store_serial="110100-100006-1">公益星门店-6</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+</header>
+<section>
+    <div class="main">
+        <div class="left">
+            <div class="option active">全部数据分析</div>
+            <div class="option">未购买原因分布</div>
+            <div class="option">看货总时长分布</div>
+            <div class="option">看货件数分布</div>
+            <div class="option">试戴次数分布</div>
+            <div class="option">款式被看次数排名</div>
+        </div>
+        <div class="right">
+            <div class="charts active"><iframe src=""></iframe></div>
+            <div class="charts" content_type="not_buy_reason"><iframe src=""></iframe></div>
+            <div class="charts" content_type="view_time_total"><iframe src=""></iframe></div>
+            <div class="charts" content_type="product_view_count"><iframe src=""></iframe></div>
+            <div class="charts" content_type="try_count_total"><iframe src=""></iframe></div>
+            <div class="charts" content_type="style_view_count"><iframe src=""></iframe></div>
+        </div>
+    </div>
+</section>
+</body>
+<script>
+    var stores = JSON.parse(localStorage.getItem('personinfo')).stores;
+    var store_serial = stores[0].serial;
+    var store_serials = [];//所有门店列表  店员进来就一家店
+    stores.forEach(function(item){
+        store_serials.push(item.serial)
+    })
+    store_serials = store_serials.join(',');
+    var domcharts = $(".charts");
+    domcharts.eq(0).find("iframe").attr("src","EchartAll.html?store_serial="+store_serials);
+    $(".goback").click(function(){
+        window.location.href = "../index.html"
+    })
+    if(stores.length>1){
+        toggleStore(stores,function(store_serial){
+            $(".option").eq(0).addClass("active").siblings(".option").removeClass("active");
+            domcharts.eq(0).addClass("active").siblings(".charts").removeClass("active");
+            var src = "EchartAll.html?store_serial="+store_serial;
+            $("iframe").attr("src","");
+            domcharts.eq(0).find("iframe").attr("src",src);
+        },'all')
+    }
+    $(".main .option").click(function(){
+        var index = $(this).index();
+        var content_type = domcharts.eq(index).attr('content_type');
+        $(this).addClass("active").siblings(".option").removeClass("active");
+        domcharts.eq(index).addClass("active").siblings(".charts").removeClass("active");
+        if(!domcharts.eq(index).find("iframe").attr("src")){
+            var serial = $(".mchname").attr("store_serial")?$(".mchname").attr("store_serial"):store_serial;
+            var src = content_type+".html?&store_serial="+serial;
+            domcharts.eq(index).find("iframe").attr("src",src)
+        }
+    })
+</script>
+</html>

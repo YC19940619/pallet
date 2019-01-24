@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <link rel="stylesheet" type="text/css" href="../common/mescroll.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../common/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/echarts.css"/>
+    <script type="text/javascript" src="../common/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="../common/rem.js"></script>
+    <script type="text/javascript" src="../common/common.js"></script>
+    <script type="text/javascript" src="../common/echarts.js"></script>
+    <script type="text/javascript" src="../common/echartcommon.js"></script>
+    <script type="text/javascript" src="../common/mescroll.min.js"></script>
+    <title>echart</title>
+</head>
+<body>
+<section id="mescroll" class="mescroll" style="display: block">
+    <div class="data-list" id="dataList">
+        <div class="box">
+            <span data-v-71e86ad1="" class="row1"></span>
+            <span data-v-71e86ad1="" class="row2"></span>
+            <span data-v-71e86ad1="" class="col2"></span>
+            <span data-v-71e86ad1="" class="col1"></span>
+            <div class="surface all" data-item-name="全部" >暂无数据</div>
+        </div>
+    </div>
+</section>
+</body>
+<script>
+    var datastyle = new datastyle()
+    var charts = function(){
+        this.init();
+    }
+    charts.prototype = {
+        init:function(){
+            this.store_serial = Request.QueryString("store_serial");
+            this.content_type = 'view_time_total';
+            var obj = document.getElementsByClassName('all')[0];
+            this.getdata('全部',null,obj)
+        },
+        getdata:function(title,style_serial,obj){
+            var option = datastyle.piedata(title);
+            var that = this;
+            var data = {
+                content_type: that.content_type,//product_to_view  not_buy_reason
+                store_serial: that.store_serial
+            }
+            if (style_serial) {//是不是全部
+                data.show_type = "item";
+                data.item = style_serial
+            } else {
+                data.show_type = "all";
+            }
+            new if_access_token({
+                type: 'get',
+                url: chartdata,
+                data: data,
+                success: function (data) {
+                    console.log(data)
+                    if(data.code === "SUCCESS"){
+                        // data.data.sort(compare('value'))
+                        // option.series[0].data = data.data;
+                        // var chart = echarts.init(obj);
+                        // chart.setOption(option);
+                        if(data.data.length>0){
+                            data.data.sort(compare('value'))
+                            option.series[0].data = data.data;
+                            var chart = echarts.init(obj);
+                            chart.setOption(option);
+                        }else{
+                            $(obj).html("暂无数据");
+                        }
+                    }
+                },
+                error: function () {
+                    new Toast({context: $('body'), message: '网络错误'}).show();
+                }
+            })
+        }
+    }
+    var getcharts =  new charts();
+    var mescroll = new MeScroll("mescroll", { //第一个参数"mescroll"对应上面布局结构div的id (1.3.5版本支持传入dom对象)
+        //如果您的下拉刷新是重置列表数据,那么down完全可以不用配置,具体用法参考第一个基础案例
+        //解析: down.callback默认调用mescroll.resetUpScroll(),而resetUpScroll会将page.num=1,再触发up.callback
+        down:{
+            isLock:true
+        },
+        up: {
+            callback: getListData, //上拉回调,此处可简写; 相当于 callback: function (page) { getListData(page); }
+            page: {
+                num: 0, //当前页 默认0,回调之前会加1; 即callback(page)会从1开始
+                size: 5 //每页数据条数,默认10
+            },
+            noMoreSize: 2, //如果列表已无数据,可设置列表的总数量要大于5才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看
+            isBounce: false //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+            // clearEmptyId: "dataList" //1.下拉刷新时会自动先清空此列表,再加入数据; 2.无任何数据时会在此列表自动提示空
+        }
+    });
+    function getListData(page){
+        //联网加载数据
+        getListDataFromNet(page.num, page.size, function(data){
+            //联网成功的回调,隐藏下拉刷新和上拉加载的状态;
+            mescroll.endSuccess(data.length);//传参:数据的总数; mescroll会自动判断列表如果无任何数据,则提示空;列表无下一页数据,则提示无更多数据;
+            setListData(data)
+            // /设置列表数据
+        }, function(){
+            //联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+            mescroll.endErr();
+        });
+    }
+    function getListDataFromNet(pageNum,pageSize,successCallback,errorCallback) {
+        //延时一秒,模拟联网  上拉下拉都需要
+        setTimeout(function () {
+            new if_access_token({
+                type: 'GET',
+                url: store_styles,
+                data:{
+                    store_serial:getcharts.store_serial,
+                    page:pageNum,
+                    per_page:pageSize
+                },
+                success: function(data){
+                    var listData = [];
+                    for (var i = 0; i < data.data.length; i++) {//数据填充
+                        //if (i == 5) break;   显示无更多数据
+                        listData.push(data.data[i]);
+                    }
+                    //回调
+                    successCallback(listData);
+                },
+                error: errorCallback
+            });
+        },500)
+    }
+    function setListData(data){
+        console.log(data)
+        for(var i =0;i<data.length;i++){
+            var str = '<div class="box">\n' +
+                '            <span data-v-71e86ad1="" class="row1"></span>\n' +
+                '            <span data-v-71e86ad1="" class="row2"></span>\n' +
+                '            <span data-v-71e86ad1="" class="col2"></span>\n' +
+                '            <span data-v-71e86ad1="" class="col1"></span>\n' +
+                '            <div class="surface item '+data[i].style_serial+'">暂无数据</div>\n' +
+                '        </div>'
+            $(".data-list").append(str)
+            getcharts.getdata(data[i].style_name,data[i].style_serial,document.getElementsByClassName(data[i].style_serial)[0])
+        }
+    }
+</script>
+</html>

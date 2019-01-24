@@ -1,0 +1,79 @@
+{
+  "status": 0,
+  "products": {
+    "BG05005": {
+      "product_name": "小火箭不对称耳钉",
+      "style_serial": "BG05005",
+      "video_url": "../img/item/BG05005/banner0.mp4",
+      "poster_url": "../img/item/BG05005/banner0.jpg",
+      "product_url": "../img/item/BG05005/product.jpg",
+      "banner_url": [
+        "../img/item/test/4.jpg",
+        "../img/item/test/5.jpg",
+        "../img/item/test/6.jpg",
+        "../img/item/test/7.jpg",
+        "../img/item/BG05005/banner1.jpg",
+        "../img/item/BG05005/banner2.jpg",
+        "../img/item/BG05005/banner3.jpg",
+        "../img/item/BG05005/banner4.jpg",
+        "../img/item/BG05005/banner5.jpg"
+      ]
+    },
+    "VC05004": {
+      "product_name": "多钻镂空设计手链",
+      "style_serial": "VC05004",
+      "video_url": "../img/item/VC05004/banner0.mp4",
+      "poster_url": "../img/item/VC05004/banner0.jpg",
+      "product_url": "../img/item/VC05004/product.jpg",
+      "banner_url": [
+        "../img/item/VC05004/banner1.jpg",
+        "../img/item/VC05004/banner2.jpg",
+        "../img/item/VC05004/banner3.jpg",
+        "../img/item/VC05004/banner4.jpg",
+        "../img/item/VC05004/banner5.jpg"
+      ]
+    },
+    "DW05011": {
+      "product_name": "多钻黑玛瑙吊坠",
+      "style_serial": "DW05011",
+      "video_url": "../img/item/DW05011/banner0.mp4",
+      "poster_url": "../img/item/DW05011/banner0.jpg",
+      "product_url": "../img/item/DW05011/product.jpg",
+      "banner_url": [
+        "../img/item/DW05011/banner1.jpg",
+        "../img/item/DW05011/banner2.jpg",
+        "../img/item/DW05011/banner3.jpg",
+        "../img/item/DW05011/banner4.jpg",
+        "../img/item/DW05011/banner5.jpg"
+      ]
+    },
+    "HW05003": {
+      "product_name": "爱自己·珍珠项链",
+      "style_serial": "HW05003",
+      "video_url": "../img/item/HW05003/banner0.mp4",
+      "poster_url": "../img/item/HW05003/banner0.jpg",
+      "product_url": "../img/item/HW05003/product.jpg",
+      "banner_url": [
+        "../img/item/HW05003/banner1.jpg",
+        "../img/item/HW05003/banner2.jpg",
+        "../img/item/HW05003/banner3.jpg",
+        "../img/item/HW05003/banner4.jpg",
+        "../img/item/HW05003/banner5.jpg"
+      ]
+    },
+    "HW050034": {
+      "product_name": "爱自己·珍珠项链",
+      "style_serial": "HW05003",
+      "video_url": "../img/item/HW05003/banner0.mp4",
+      "poster_url": "../img/item/HW05003/banner0.jpg",
+      "product_url": "../img/item/HW05003/product.jpg",
+      "banner_url": [
+        "../img/item/HW05003/banner1.jpg",
+        "../img/item/HW05003/banner2.jpg",
+        "../img/item/HW05003/banner3.jpg",
+        "../img/item/HW05003/banner4.jpg",
+        "../img/item/HW05003/banner5.jpg"
+      ]
+    }
+  }
+}

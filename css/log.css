@@ -1,0 +1,120 @@
+body{
+    background: url("../img/bj/indexbj.png") center center no-repeat;
+    background-size: 100%;
+}
+.title{
+    width: 100%;
+    height: 2rem;
+    line-height: 2rem;
+    color: #fff;
+    font-size: 0.5rem;
+    text-align: center;
+}
+.am-alert{
+    width: 80%;
+    display: none;
+    margin: 0 auto;
+    padding: 0;
+}
+.main{
+    width: 10rem;
+    height: 5rem;
+    background: rgba(50,52,66,.3);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin: -2.5rem 0 0 -5rem;
+    overflow: hidden;
+}
+.main .left{
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+.main .left img{
+    display: block;
+    width: 2rem;
+    margin: 1.5rem auto;
+}
+.main .right{
+    width: 50%;
+    float: right;
+}
+.main .right .nav{
+    height: 1rem;
+}
+.main .right .nav span{
+    display: block;
+    float: left;
+    width: 50%;
+    height: 100%;
+    color: #000;
+    text-align: center;
+    line-height: 1rem;
+    font-size: 0.24rem;
+}
+.main .right .nav span.active{
+    color: #fff;
+    font-size: 0.28rem;
+    /*text-shadow:2px 2px 2px #fff;*/
+}
+.main .right .content{
+    height: 4rem;
+}
+.main .right .content .toggle{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding-top:0.5rem;
+    width: 100%;
+    height: 4rem;
+    display: none;
+}
+.main .right .content .toggle.active{
+    display: block;
+}
+.main .right .group{
+    width: 80%;
+    height: 0.6rem;
+    margin: 0 auto 0.2rem;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    -webkit-flex-direction: row;
+}
+.main .right .group span{
+    display: block;
+    width: 0.7rem;
+    height: 0.6rem;
+    font-size: 0.24rem;
+    text-align: center;
+    line-height: 0.6rem;
+    color: #555;
+    background-color: #eee;
+    border: 1px solid #ccc;
+}
+.main .right .group input{
+    flex: 1;
+    -webkit-flex: 1;
+    line-height: 0.6rem;
+    height: 0.6rem;
+    font-size: 0.24rem;
+    text-indent: 0.2rem;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+}
+
+.main .right .loginbtn{
+    display: block;
+    width: 80%;
+    color: #fff;
+    height: 0.6rem;
+    text-align: center;
+    line-height: 0.6rem;
+    font-size: 0.24rem;
+    margin: 0.5rem auto 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: #c88d6d;
+}

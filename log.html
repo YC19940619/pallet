@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>登录</title>
+    <link rel="stylesheet" href="common/common.css">
+    <link rel="stylesheet" href="css/log.css">
+    <script type="text/javascript" src="common/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="common/rem.js"></script>
+    <script type="text/javascript" src="common/common.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+</head>
+<body>
+<p class="title">梦工场智慧门店货品管理系统</p>
+<div class="main">
+    <div class="left">
+        <img src="img/headlogo.png">
+    </div>
+    <div class="right">
+        <div class="nav"><span class="active">门店登录</span><span>经销商登录</span></div>
+        <div class="content">
+            <div class="store toggle active">
+                <div class="group">
+                    <span class="iconfont">&#xe61c;</span>
+                    <input type="text" class="Username" placeholder="输入门店账号" value="">
+                </div>
+                <div class="group">
+                    <span class="iconfont">&#xe64c;</span>
+                    <input type="password" class="Password" placeholder="输入密码" value="">
+                </div>
+                <p class="loginbtn storeauth">登录</p>
+            </div>
+            <div class="distributor toggle">
+                <div class="group">
+                    <span class="iconfont">&#xe61c;</span>
+                    <input type="text" class="Username" placeholder="输入经销商账号" value="">
+                </div>
+                <div class="group">
+                    <span class="iconfont">&#xe64c;</span>
+                    <input type="password" class="Password" placeholder="输入密码" value="">
+                </div>
+                <p class="loginbtn distributorauth">登录</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="common/jquery-2.2.1.min.js"></script>
+<script>
+    if(localStorage.getItem('access_token')){
+        window.location = "index.html"
+    }else if (localStorage.getItem('serial')){
+        $(".store .Username").val(localStorage.getItem('serial'))
+    }
+    $(".nav span").click(function(){
+        var index = $(this).index();
+        $(this).addClass("active").siblings("span").removeClass("active");
+        $(".content .toggle").eq(index).addClass("active").siblings(".toggle").removeClass("active");
+    })
+    $(".storeauth").click(function(){//门店登录
+        var username = $(".store .Username").val();
+        var password = $(".store .Password").val();
+        storeAuth(username,password)
+    })
+    $(".distributorauth").click(function(){//经销商登录
+        var username = $(".distributor .Username").val();
+        var password = $(".distributor .Password").val();
+        auth(username,password)
+    })
+</script>
+</body>
+</html>

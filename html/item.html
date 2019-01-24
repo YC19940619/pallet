@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="../common/swiper.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../common/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/item.css"/>
+    <script type="text/javascript" src="../cordova.js"></script>
+    <script type="text/javascript" src="../common/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="../common/rem.js"></script>
+    <script type="text/javascript" src="../common/swiper.min.js"></script>
+    <script type="text/javascript" src="../common/common.js"></script>
+    <script type="text/javascript" src="../common/fastclick.js"></script>
+    <script type="text/javascript" src="../js/itemfun.js"></script>
+    <script type="text/javascript" src="../js/item.js"></script>
+    <title>详情</title>
+</head>
+<body>
+<header>
+    <span class="left goback"><img src="../img/goback.png"></span>
+    <span class="right exit">结束看货</span>
+</header>
+<div class="pallet" style="display: none;flex-direction: row;justify-content: space-around;height: 1.1rem;z-index: 99999;">
+    <div class="flag_in" style="height:1rem;border:1px solid #000;">放入商品</div>
+    <input class="flag_input" value="" placeholder="输入标签" style="border: 1px solid #000;">
+    <div class="flag_out" style="height:1rem;border:1px solid #000;">取出商品</div>
+</div>
+<section>
+    <div class="nav">
+
+    </div>
+    <div class="main"> </div>
+</section>
+<div class="mask">
+    <div class="info">
+        <div class="m_info name">
+            <span class="left"><i style="color: red;display: inline-block;width: 0.5rem;text-align: center;line-height: 0.7rem;"></i>客户姓名：</span>
+            <div class="right"><input type="text" class="edit" placeholder="请输入客户名称" value="匿名" maxlength="20"></div>
+        </div>
+        <div class="m_info phone">
+            <span class="left">客户联系方式：</span>
+            <div class="right"><input type="number" class="edit" placeholder="请输入客户联系方式"></div>
+        </div>
+        <!--<div class="m_info guider_name">-->
+            <!--<span class="left">导购姓名：</span>-->
+            <!--<div class="right"><input type="text" class="edit" placeholder="请输入导购名称" value="匿名"></div>-->
+        <!--</div>-->
+        <div class="m_info gender">
+            <span class="left">客户性别：</span>
+            <div class="right">
+                <input type="radio" class="check" checked="checked" name="sex" value='male'/><label>男</label>
+                <input type="radio" class="check" name="sex" value='female'/><label>女</label>
+            </div>
+        </div>
+        <div class="m_info age">
+            <span class="left">客户年龄段：</span>
+            <div class="right">
+                <input type="radio" class="check" name="age" value='16岁以下'/><label>16岁以下</label>
+                <input type="radio" class="check" name="age" value='16-24岁'/><label>16-24岁</label>
+                <input type="radio" class="check" checked="checked"  name="age" value='25-34岁'/><label>25-34岁</label>
+                <input type="radio" class="check" name="age" value='16-24岁'/><label>35-44岁</label>
+                <input type="radio" class="check" name="age" value='45-54岁'/><label>45-54岁</label>
+                <input type="radio" class="check" name="age" value='55岁以上'/><label>55岁以上</label>
+            </div>
+        </div>
+        <div class="checklist"></div>
+        <div class="m_info attach">
+            <span class="left">备注：</span>
+            <div class="right">
+                <textarea maxlength="64"> </textarea>
+            </div>
+        </div>
+        <p class="button submit">提交</p>
+        <p class="button cancel">取消</p>
+    </div>
+</div>
+</body>
+<script>
+</script>
+</html>

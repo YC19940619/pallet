@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <link rel="stylesheet" type="text/css" href="../common/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/feedBack.css"/>
+    <script type="text/javascript" src="../cordova.js"></script>
+    <script type="text/javascript" src="../common/fastclick.js"></script>
+    <script type="text/javascript" src="../common/rem.js"></script>
+    <script type="text/javascript" src="../common/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="../common/common.js"></script>
+    <title>意见反馈</title>
+</head>
+<body>
+<header>
+    <span class="left goback"><img src="../img/goback.png"></span>
+    <p>意见反馈</p>
+</header>
+<section>
+    <div class="feedback">
+        <div class="notice">
+            <div class="left"><img src="../img/headlogo.png"></div>
+            <div class="right">你好！欢迎反馈，请先选择反馈意见类型，可以更方便我们查看问题哦~</div>
+        </div>
+        <div class="type">
+            <div class="left">选择分类：</div>
+            <div class="right"><select value="其他">
+                <option>其他</option>
+                <option>BUG类</option>
+                <option>功能类</option>
+                <option>体验类</option>
+            </select></div>
+        </div>
+        <textarea maxlength="200" placeholder="请输入200字以内的意见反馈"></textarea>
+        <div class="num"><i class="now-num">0</i>/<i class="max-num">200</i></div>
+        <p class="button submit">提交</p>
+        <p class="button reset">重置</p>
+    </div>
+</section>
+</body>
+<script src="../js/feedBack.js"></script>
+</html>

@@ -1,0 +1,27 @@
+section{
+    overflow: scroll;
+}
+.item{
+    width: 30%;
+    /*height: 4rem;*/
+    margin: 0.3rem 1.6%;
+    float: left;
+    box-shadow: 1px 1px 3px #ccc;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 0.3rem;
+}
+.box{
+    width: 100%;
+    overflow: hidden;
+}
+header .mchnav .mchname{
+    color: #000;
+}
+header .mchlist .selecting{
+    color: #000;
+}
+header .select-ul{
+    background: #fff;
+    color: #000;
+}

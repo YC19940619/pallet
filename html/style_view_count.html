@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <link rel="stylesheet" type="text/css" href="../common/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/echarts.css"/>
+    <script type="text/javascript" src="../common/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="../common/rem.js"></script>
+    <script type="text/javascript" src="../common/common.js"></script>
+    <script type="text/javascript" src="../common/echarts.js"></script>
+    <script type="text/javascript" src="../common/echartcommon.js"></script>
+    <title>echart</title>
+</head>
+<body>
+<section>
+    <div class="main">
+        <div class="box" style="width: 95%;height: 100%;margin: 0 2.5%;">
+            <span data-v-71e86ad1="" class="row1"></span>
+            <span data-v-71e86ad1="" class="row2"></span>
+            <span data-v-71e86ad1="" class="col2"></span>
+            <span data-v-71e86ad1="" class="col1"></span>
+            <div class="surface" data-item-name="款式被看次数排行TOP10">暂无数据</div>
+        </div>
+    </div>
+</section>
+</body>
+<script>
+    var datastyle = new datastyle()
+    var charts = function(){
+        this.init();
+    }
+    charts.prototype = {
+        init:function(){
+            this.topnum = 10;
+            this.store_serial = Request.QueryString("store_serial");
+            this.content_type = 'style_view_count';
+            this.seriesname = '款式被看次数排行TOP10';
+            obj = document.getElementsByClassName('surface')[0];
+            this.getdata(this.seriesname,obj)
+        },
+        getdata:function(title,obj) {
+            var that =this;
+            var option = datastyle.bardata(title);
+            var data = {
+                content_type: this.content_type,
+                store_serial: this.store_serial,
+                show_type: 'all' //被看款式排行
+            }
+            new if_access_token({
+                type: 'get',
+                url: chartdata,
+                data: data,
+                success: function (data) {
+                    if (data.code === "SUCCESS") {
+                        data.data.sort(compare('value'))
+                        console.log(data.data)
+                        var topnumber = that.topnum > data.data.length ? data.data.length : that.topnum
+                        for (var i = 0; i < topnumber; i++) {
+                            option.yAxis.data.unshift(data.data[i].name);
+                            option.series[0].data.unshift(data.data[i].value);
+                        }
+                        var chart = echarts.init(obj);
+                        chart.setOption(option);
+                    }
+                },
+                error: function () {
+                    new Toast({context: $('body'), message: '网络错误'}).show();
+                }
+            })
+        }
+    }
+    new charts();
+</script>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="../common/swiper.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../common/common.css"/>
+    <script type="text/javascript" src="../cordova.js"></script>
+    <script type="text/javascript" src="../common/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="../common/rem.js"></script>
+    <script type="text/javascript" src="../common/swiper.min.js"></script>
+    <script type="text/javascript" src="../common/common.js"></script>
+    <script type="text/javascript" src="../common/fastclick.js"></script>
+    <title>详情</title>
+    <style>
+        section{
+            overflow: scroll;
+        }
+        .item-wapper{
+            width: 25%;
+            float: left;
+        }
+        .item{
+            padding: 0.2rem;
+            margin: 0.2rem;
+            box-shadow: 1px 1px 3px #ccc;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <span class="left goback"><img src="../img/goback.png"></span>
+    <p>标签识别查询</p>
+    <span class="right" style="display: none">清空</span>
+</header>
+<div class="pallet" style="display: none;flex-direction: row;justify-content: space-around;height: 1.1rem;z-index: 99999;">
+    <div class="flag_in" style="height:1rem;border:1px solid #000;">放入商品</div>
+    <select style="border:1px solid #fff;color: #000;">
+        <option value="HW0607700003">HW0607700003</option>
+        <option value="3130303031323200">3130303031323200</option>
+        <option value="HW0603500015">HW0603500015</option>
+        <option value="CT0601300021">CT0601300021</option>
+        <option value="TF0600100108">TF0600100108</option>
+        <option value="036847">036847</option>
+        <option value="036918">036918</option>
+        <option value="036848">036848</option>
+        <option value="036849">036849</option>
+        <option value="036854">036854</option>
+        <option value="036855">036855</option>
+        <option value="036856">036856</option>
+        <option value="036857">036857</option>
+        <option value="036864">036864</option>
+        <option value="036879">036879</option>
+        <option value="036906">036906</option>
+        <option value="036907">036907</option>
+        <option value="036908">036908</option>
+        <option value="TF0602300009">TF0602300009</option>
+        <option value="TF0602000051">TF0602000051</option>
+    </select>
+    <div class="flag_out" style="height:1rem;border:1px solid #000;">取出商品</div>
+</div>
+<section>
+
+</section>
+</body>
+<script>
+    var pallet_data = function(){}
+    pallet_data.prototype = {
+        init :function(){
+            this.rfids = [];
+            var that = this;
+            (function browserRedirect(){
+                var sUserAgent = navigator.userAgent.toLowerCase();
+                var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+                var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+                var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+                if(bIsIpad || bIsIphoneOs || bIsMidp){
+                    that.platform = 'ios'
+                    console.log('ios')
+                }else{
+                    that.platform = 'android'
+                    console.log('android')
+                }
+            })();
+        },
+        getProducts:function(rfid,oldrfid){
+            var url = norfidurl+rfid;
+            var that = this;
+            $.ajax({
+                type:'get',
+                url:url,
+                data:{},
+                success:function(data){
+                    var style_serial,style_name;
+                    that.rfids.push(rfid);
+                    if(data.code === "SUCCESS"){
+                        style_serial = data.data.style_serial
+                        style_name = data.data.style_name
+                    }else{
+                        style_serial = '不存在'
+                        style_name = '不存在'
+                    }
+                    var str = '<div class="item-wapper"><div class="item"><p>标签编号：'+oldrfid+'</p><p>货品编号：'+rfid+'</p><p>款式编号：'+style_serial+'</p><p>款式名字：'+style_name+'</p></div></div>'
+                    $("section").append(str)
+                },
+                error:function(e){
+                    console.log(e)
+                    new Toast({context:$('body'),message:'标签编号：'+oldrfid+'/商品编号：'+rfid+'不存在'}).show();
+                }
+            })
+        },
+        hexToString:function(str){
+            var arr = this.groupArray(str);    //将16进制字符串进行每两个分组
+            var val = "";
+            for (var i = 0; i < arr.length; i++) {
+                val += String.fromCharCode(parseInt(arr[i], 16));    //将分组后的16进制字符串转10进制Unicode码,然后将Unicode码转换为字符
+            }
+            return val;
+        },
+        groupArray:function(str){
+            var result = [];
+            for (var i = 0; i < str.length/2; i++) {
+                var aa = str.slice(i*2, (i+1)*2);
+                result.push(aa);
+            }
+            return result;
+        },
+        SetTagInListener : function(rfid){//放入商品
+            var oldrfid = rfid;
+            if(this.platform === 'android'){
+                rfid = this.hexToString(rfid);
+            }
+            rfid = this.hexToString(rfid);
+            var index = this.rfids.indexOf(rfid);
+            if(index < 0){//没有放过
+                this.getProducts(rfid,oldrfid)//获取商品信息
+            }
+        },
+        SetTagOutListener : function(rfid){//拿出商品
+
+        },
+        endInit :function(){
+
+        }
+    }
+    var palletData = new pallet_data();
+    var SetTagInListener = function(rfid){//放入商品
+        palletData.SetTagInListener(rfid)
+    }
+    var SetTagOutListener = function(rfid){//拿出商品
+        palletData.SetTagOutListener(rfid)
+    }
+    palletData.init();
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+        cordova.plugins.TfPlugin.SetTagInListener(SetTagInListener);
+        cordova.plugins.TfPlugin.SetTagOutListener(SetTagOutListener);
+        // cordova.plugins.TfPlugin.SetTagInDelayTime(300);
+        // cordova.plugins.TfPlugin.SetTagOutDelayTime(2000);
+        cordova.plugins.TfPlugin.BeginCapture();
+    }
+    $(".flag_in").click(function(){
+        var rfid =  $("select").val();
+        SetTagInListener(rfid);
+    })
+    $(".flag_out").click(function(){
+        var rfid =  $("select").val();
+        SetTagOutListener(rfid)
+    })
+    $(".goback").click(function(){//返回
+        cordova.plugins.TfPlugin.EndCapture();
+        history.go(-1)
+    })
+    $(".right").click(function(){//清空
+        $("section").html('')
+    })
+</script>
+</html>
